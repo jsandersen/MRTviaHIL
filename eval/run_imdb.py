@@ -1,17 +1,6 @@
 def main():
     print('start ...')
 
-    import os
-    os.environ["OMP_NUM_THREADS"] = "1"
-    os.environ["OPENBLAS_NUM_THREADS"] = "1"
-    os.environ["MKL_NUM_THREADS"] = "1" 
-    os.environ["VECLIB_MAXIMUM_THREADS"] = "1" 
-    os.environ["NUMEXPR_NUM_THREADS"] = "1" 
-
-    import tensorflow as tf
-    tf.config.threading.set_intra_op_parallelism_threads(1)
-    tf.config.threading.set_inter_op_parallelism_threads(1)
-    
     print('imdb')
 
     import logging
@@ -39,66 +28,66 @@ def main():
     X_enc = np.array(X_enc)
     y = np.array(y)
 
-    #print('Naive Bayes')
-    #from sklearn.naive_bayes import GaussianNB
-    #cls = GaussianNB
-    #dfs = predict(cls, (X_enc), y, skl_model=True)
-    #print_all_stats(dfs, 'imdb_gnb')
+    print('Naive Bayes')
+    from sklearn.naive_bayes import GaussianNB
+    cls = GaussianNB
+    dfs = predict(cls, (X_enc), y, skl_model=True)
+    print_all_stats(dfs, 'imdb_gnb')
 
-    #print('Logistic Regression')
-    #from sklearn.linear_model import LogisticRegression
-    #clf = LogisticRegression
-    #model_args = {'random_state': 42, 'max_iter': 100}
-    #dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
-    #print_all_stats(dfs, 'imdb_lr')
+    print('Logistic Regression')
+    from sklearn.linear_model import LogisticRegression
+    clf = LogisticRegression
+    model_args = {'random_state': 42, 'max_iter': 100}
+    dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
+    print_all_stats(dfs, 'imdb_lr')
 
-    #print('Random Forest Classifier')
-    #from sklearn.ensemble import RandomForestClassifier
-    #clf = RandomForestClassifier
-    #model_args = {'n_estimators': 100, 'bootstrap': True, 'random_state': 42}
-    #dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
-    #print_all_stats(dfs, 'imdb_rf')
+    print('Random Forest Classifier')
+    from sklearn.ensemble import RandomForestClassifier
+    clf = RandomForestClassifier
+    model_args = {'n_estimators': 100, 'bootstrap': True, 'random_state': 42}
+    dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
+    print_all_stats(dfs, 'imdb_rf')
 
-    #from sklearn.neighbors import KNeighborsClassifier
-    #print('K-Nearest Neighbors')
-    #clf = KNeighborsClassifier
-    #model_args = {'n_neighbors': 25}
-    #dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
-    #print_all_stats(dfs, 'imdb_knn')
+    from sklearn.neighbors import KNeighborsClassifier
+    print('K-Nearest Neighbors')
+    clf = KNeighborsClassifier
+    model_args = {'n_neighbors': 25}
+    dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
+    print_all_stats(dfs, 'imdb_knn')
 
-    #print('Suport Vector Machine')
-    #from sklearn import svm
-    #from src.model.wrapper import SklearnWrapper
-    #clf = SklearnWrapper
-    #model_args = {'Clf' : svm.SVC, 'kernel': 'linear', 'probability': True}
-    #dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
-    #print_all_stats(dfs, 'imdb_svm')
+    print('Suport Vector Machine')
+    from sklearn import svm
+    from src.model.wrapper import SklearnWrapper
+    clf = SklearnWrapper
+    model_args = {'Clf' : svm.SVC, 'kernel': 'linear', 'probability': True}
+    dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
+    print_all_stats(dfs, 'imdb_svm')
 
-    #print('Multi Layer Perceptron (TF)')
-    #callback = tfk.callbacks.EarlyStopping(monitor='val_loss', patience=10, min_delta=0.0001)
-    #model_args = {"input_shape": 768, "n_classes": 2, 'mcd':False, 'T':1, 'callbacks': [callback]}
-    #dfs = predict(MLP, X_enc, y, batch_size=128, epochs=100, val=True, save='imdb', **model_args)
-    #print_all_stats(dfs, 'imdb_mlp_tf')
+    print('Multi Layer Perceptron (TF)')
+    callback = tfk.callbacks.EarlyStopping(monitor='val_loss', patience=10, min_delta=0.0001)
+    model_args = {"input_shape": 768, "n_classes": 2, 'mcd':False, 'T':1, 'callbacks': [callback]}
+    dfs = predict(MLP, X_enc, y, batch_size=128, epochs=100, val=True, save='imdb', **model_args)
+    print_all_stats(dfs, 'imdb_mlp_tf')
 
     print('Bayesian Multi Layer Perceptron (TF)')
     callback = tfk.callbacks.EarlyStopping(monitor='val_loss', patience=10, min_delta=0.0001)
     model_args = {"input_shape": 768, "n_classes": 2, 'mcd':True, 'T':100, 'callbacks': [callback]}
     dfs = predict(MLP, X_enc, y, batch_size=128, epochs=100, val=True, load='imdb', **model_args)
-    #print_all_stats(dfs, 'imdb_bmlp_tf')
+    print_all_stats(dfs, 'imdb_bmlp_tf')
 
-    #print('Multi Layer Perceptron (Sklearn)')
-    #from sklearn.neural_network import MLPClassifier
-    #clf = MLPClassifier
-    #model_args = {'random_state': 42, 'early_stopping': True, 'max_iter': 100, 'hidden_layer_sizes':(500, 500)}
-    #dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
-    #print_all_stats(dfs, 'imdb_mlp')
+    print('Multi Layer Perceptron (Sklearn)')
+    from sklearn.neural_network import MLPClassifier
+    clf = MLPClassifier
+    model_args = {'random_state': 42, 'early_stopping': True, 'max_iter': 100, 'hidden_layer_sizes':(500, 500)}
+    dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
+    print_all_stats(dfs, 'imdb_mlp')
 
-    #print('Decision Tree Classifier')
-    #from sklearn.tree import DecisionTreeClassifier
-    #clf = DecisionTreeClassifier
-    #model_args = {'random_state': 42}
-    #dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
-    #print_all_stats(dfs, 'imdb_dt')
+    print('Decision Tree Classifier')
+    from sklearn.tree import DecisionTreeClassifier
+    clf = DecisionTreeClassifier
+    model_args = {'random_state': 42}
+    dfs = predict(clf, X_enc, y, skl_model=True, **model_args)
+    print_all_stats(dfs, 'imdb_dt')
 
     print('end ...')
 
