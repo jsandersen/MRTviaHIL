@@ -1,0 +1,5 @@
+#!/bin/bash
+python run_appstore.py >> appstore.txt
+python run_hatespeech.py >> hatespeech.txt
+python run_reuters.py >> retuers.txt
+python run_imdb.py >> imdb.txt
