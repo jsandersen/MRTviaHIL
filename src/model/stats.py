@@ -31,7 +31,6 @@ def brier_multi(targets, probs):
     return np.mean(np.sum((probs - targets)**2, axis=1))
 
 def predict(Model, X, y, skl_model=False, batch_size=None, epochs=None, callbacks=None, val=False, prob=True, save=None, load=None, **kwargs):     
-    seed(42)
     
     dfs = []
     f1_micro_list = []
